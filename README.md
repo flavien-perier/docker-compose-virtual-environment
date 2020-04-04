@@ -3,6 +3,8 @@
 Install:
 
 ```sh
+mkdir documents
+
 touch .env
 echo "PASSWORD=password" >> .env
 echo "SANDBOX_LOCATION=/home/user/sandbox-files" >> .env
