@@ -1,0 +1,211 @@
+version: "3.7"
+services:
+  dns:
+    build: ./images/dns/
+    container_name: dns
+    restart: always
+    volumes:
+      - ./network/bind9/named.conf:/etc/bind/named.conf
+      - ./network/bind9/db.local:/etc/bind/db.local
+    ports:
+      - 127.0.0.1:53:53
+      - 127.0.0.1:53:53/udp
+
+  openssl:
+    build: ./images/openssl/
+    container_name: openssl
+    volumes:
+      - ./network/certificates:/root/certificates
+    environment:
+      CERTIFICATES: phpmyadmin pgadmin mongo neo4j php jupyter vscode openrefine  
+
+  nginx: 
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    depends_on:
+      - openssl
+    links:
+      - php
+      - phpmyadmin
+      - pgadmin
+      - mongo-express
+      - neo4j
+      - vscode
+      - jupyter
+      - openrefine
+    volumes:
+      - ./network/certificates:/etc/certificates
+      - ./network/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./network/nginx/sites:/etc/nginx/sites
+    ports:
+      - 127.0.0.1:80:80
+      - 127.0.0.1:443:443
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    volumes:
+      - db-maria:/var/lib/mysql
+    ports:
+      - 127.0.0.1:3306:3306
+    environment:
+      MYSQL_DATABASE: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: ${PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${PASSWORD}
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    links: 
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: admin
+      PMA_PASSWORD: ${PASSWORD}
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: always
+    volumes:
+      - db-postgres:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_DB: admin
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ${PASSWORD}
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: ${PASSWORD}
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    volumes:
+      - db-mongo:/data/db
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${PASSWORD}
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    links: 
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${PASSWORD}
+
+  neo4j:
+    image: neo4j
+    container_name: neo4j
+    restart: always
+    volumes:
+      - ./network/certificates/neo4j/neo4j.key:/var/lib/neo4j/certificates/bolt/private.key
+      - ./network/certificates/neo4j/neo4j.cert:/var/lib/neo4j/certificates/bolt/public.crt
+      - db-neo4j:/data
+    ports:
+      - 127.0.0.1:7687:7687
+    environment:
+      NEO4J_AUTH: neo4j/${PASSWORD}
+      NEO4J_dbms_connector_bolt_enabled: "true"
+      NEO4J_dbms_connector_http_enabled: "true"
+      NEO4J_dbms_connector_https_enabled: "false"
+      NEO4J_dbms_connector_bolt_tls__level: OPTIONAL
+      NEO4J_dbms_connector_bolt_address: 0.0.0.0:7687
+      NEO4J_dbms_ssl_policy_default_client__auth: NONE
+      NEO4J_bolt_ssl__policy: default_policy
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command: redis-server --requirepass ${PASSWORD}
+    restart: always
+    volumes:
+      - db-redis:/data
+    ports:
+      - 127.0.0.1:6379:6379
+
+  php:
+    build: ./images/php/
+    container_name: php
+    restart: always
+    links:
+      - mariadb
+    volumes:
+      - ./documents/php:/var/www/html/
+
+  jupyter:
+    build: ./images/jupyter/
+    container_name: jupyter
+    restart: always
+    volumes:
+      - ./documents/jupyter:/opt/notebooks
+    environment:
+      JUPYTER_PASSWORD: ${PASSWORD}
+
+  vscode:
+    image: codercom/code-server:v2
+    container_name: vscode
+    restart: always
+    volumes:
+      - ./documents/vscode:/home/coder/project
+    environment:
+      PASSWORD: ${PASSWORD}
+
+  openrefine:
+    image: vimagick/openrefine
+    container_name: openrefine
+    restart: always
+    volumes:
+      - ./documents/openrefine:/data
+
+  sandbox-dev:
+    build: ./images/sandbox-dev/
+    container_name: sandbox-dev
+    restart: always
+    volumes:
+      - ./documents:/home/admin/documents
+      - ${SANDBOX_LOCATION}:/home/admin/sandbox
+    ports:
+      - 127.0.0.1:2201:22
+      - 127.0.0.1:8080:8080
+    environment:
+      PASSWORD: ${PASSWORD}
+
+  sandbox-hack:
+    build: ./images/sandbox-hack/
+    container_name: sandbox-hack
+    restart: always
+    volumes:
+      - ./documents:/home/admin/documents
+      - ${SANDBOX_LOCATION}:/home/admin/sandbox
+    ports:
+      - 127.0.0.1:2202:22
+    environment:
+      PASSWORD: ${PASSWORD}
+
+volumes:
+  db-maria:
+  db-postgres:
+  db-neo4j:
+  db-mongo:
+  db-redis:
