@@ -152,14 +152,16 @@ services:
     links:
       - mariadb
     volumes:
-      - ./documents/php:/var/www/html/
+      - ./documents/php:/var/www/html/documents
+      - ${SANDBOX_LOCATION}:/var/www/html/sandbox
 
   jupyter:
     build: ./images/jupyter/
     container_name: jupyter
     restart: always
     volumes:
-      - ./documents/jupyter:/opt/notebooks
+      - ./documents/jupyter:/opt/notebooks/documents
+      - ${SANDBOX_LOCATION}:/opt/notebooks/sandbox
     environment:
       JUPYTER_PASSWORD: ${PASSWORD}
 
