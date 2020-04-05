@@ -1,6 +1,6 @@
 # Docker compose virtual environment
 
-Install:
+## Installation
 
 ```sh
 mkdir documents
@@ -13,6 +13,8 @@ docker compose up -d
 ```
 
 Use DNS `127.0.0.1:53`
+
+## Usage
 
 Login to the urls:
 
@@ -30,6 +32,7 @@ Uses services on ports:
 - `53`: DNS
 - `2201`: SSH Debian
 - `2202`: SSH Kali
+- `8080`: Debian service
 - `5432`: PostgreSQL
 - `3306`: MariaDB
 - `22017`: MongoDB

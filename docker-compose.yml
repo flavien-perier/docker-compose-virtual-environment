@@ -8,7 +8,6 @@ services:
       - ./network/bind9/named.conf:/etc/bind/named.conf
       - ./network/bind9/db.local:/etc/bind/db.local
     ports:
-      - 127.0.0.1:53:53
       - 127.0.0.1:53:53/udp
 
   openssl:
