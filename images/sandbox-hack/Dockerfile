@@ -16,7 +16,12 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     openssh-client \
-    openssh-server
+    openssh-server \
+    nmap \
+    crunch \
+    aircrack-ng \
+    john \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID admin && \
     useradd -g admin -m -u $DOCKER_UID admin && \

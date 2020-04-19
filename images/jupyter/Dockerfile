@@ -11,7 +11,9 @@ ENV JUPYTER_PASSWORD=password
 
 WORKDIR /opt/jupyter
 
-RUN pip3 install jupyter jupyter_contrib_nbextensions
+RUN apt-get update && apt-get install -y sudo && \
+    pip3 install jupyter jupyter_contrib_nbextensions \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID jupyter && \
     useradd -g jupyter -M -d /opt/jupyter -u $DOCKER_UID jupyter
@@ -19,7 +21,8 @@ RUN groupadd -g $DOCKER_GID jupyter && \
 COPY password.py password.py
 COPY start.sh start.sh
 RUN chmod -R 750 /opt/jupyter && \
-    chown -R jupyter:jupyter /opt/jupyter
+    chown -R jupyter:jupyter /opt/jupyter && \
+    echo "jupyter ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER jupyter
 VOLUME /opt/notebooks

@@ -26,7 +26,8 @@ RUN apt-get update && apt-get install -y \
     g++ \
     make \
     openssh-client \
-    openssh-server
+    openssh-server \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID admin && \
     useradd -g admin -m -u $DOCKER_UID admin && \
