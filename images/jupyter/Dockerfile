@@ -12,7 +12,7 @@ ENV JUPYTER_PASSWORD=password
 WORKDIR /opt/jupyter
 
 RUN apt-get update && apt-get install -y sudo && \
-    pip3 install jupyter jupyter_contrib_nbextensions \
+    pip3 install jupyter jupyter_contrib_nbextensions jupyterthemes \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID jupyter && \
@@ -37,6 +37,7 @@ RUN jupyter contrib nbextension install --user && \
     jupyter nbextension enable skip-traceback/main && \
     jupyter nbextension enable varInspector/main && \
     jupyter nbextension enable table_beautifier/main && \
-    jupyter nbextension enable snippets_menu/main
+    jupyter nbextension enable snippets_menu/main && \
+    jt -t monokai -f fira -fs 13 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T
 
 CMD ./start.sh
