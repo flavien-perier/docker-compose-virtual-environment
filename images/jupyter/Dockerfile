@@ -12,7 +12,7 @@ ENV JUPYTER_PASSWORD=password
 WORKDIR /opt/jupyter
 
 RUN apt-get update && apt-get install -y sudo && \
-    pip3 install jupyter jupyter_contrib_nbextensions jupyterthemes \
+    pip3 install jupyter jupyter_contrib_nbextensions jupyterthemes ipyparallel \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID jupyter && \
@@ -31,13 +31,18 @@ EXPOSE 8080
 RUN pip3 install pandas scipy numpy matplotlib keras nltk \
                  scapy
 
-RUN jupyter contrib nbextension install --user && \
-    jupyter nbextension enable hinterland/hinterland && \
-    jupyter nbextension enable autosavetime/main && \
-    jupyter nbextension enable skip-traceback/main && \
-    jupyter nbextension enable varInspector/main && \
-    jupyter nbextension enable table_beautifier/main && \
-    jupyter nbextension enable snippets_menu/main && \
+RUN pip3 install jupyter-tabnine --user && \
+    jupyter contrib nbextension install --user && \
+    jupyter nbextension install --py jupyter_tabnine --user && \
+    jupyter nbextension enable --py jupyter_tabnine --user && \
+    jupyter serverextension enable --py jupyter_tabnine --user && \
+    jupyter nbextension enable execute_time/ExecuteTime --user && \
+    jupyter nbextension enable autosavetime/main --user && \
+    jupyter nbextension enable hide_input_all/main --user && \
+    jupyter nbextension enable skip-traceback/main --user && \
+    jupyter nbextension enable varInspector/main --user && \
+    jupyter nbextension enable table_beautifier/main --user && \
+    jupyter nbextension enable snippets_menu/main --user && \
     jt -t monokai -f fira -fs 13 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T
 
 CMD ./start.sh
