@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3
+FROM python:slim-buster
 
 LABEL maintainer="Flavien PERIER <perier@flavien.io>"
 LABEL version="1.0"
@@ -11,13 +11,7 @@ ENV JUPYTER_PASSWORD=password
 
 WORKDIR /opt/jupyter
 
-RUN conda install -c conda-forge jupyter -y && \
-    conda install -c conda-forge jupyter_contrib_nbextensions -y && \
-    conda install -c conda-forge keras -y && \
-    conda install -c conda-forge/label/broken keras -y && \
-    conda install -c conda-forge/label/cf201901 keras -y && \
-    conda install -c conda-forge scapy -y && \
-    conda install -c conda-forge folium -y
+RUN pip3 install jupyter jupyter_contrib_nbextensions
 
 RUN groupadd -g $DOCKER_GID jupyter && \
     useradd -g jupyter -M -d /opt/jupyter -u $DOCKER_UID jupyter
@@ -31,7 +25,11 @@ USER jupyter
 VOLUME /opt/notebooks
 EXPOSE 8080
 
-RUN jupyter nbextension enable hinterland/hinterland && \
+RUN pip3 install pandas scipy numpy matplotlib keras nltk \
+                 scapy
+
+RUN jupyter contrib nbextension install --user && \
+    jupyter nbextension enable hinterland/hinterland && \
     jupyter nbextension enable autosavetime/main && \
     jupyter nbextension enable skip-traceback/main && \
     jupyter nbextension enable varInspector/main && \

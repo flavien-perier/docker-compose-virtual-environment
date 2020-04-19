@@ -9,6 +9,15 @@ services:
       - ./network/bind9/db.local:/etc/bind/db.local
     ports:
       - 127.0.0.1:53:53/udp
+      
+  proxy:
+    build: ./images/proxy/
+    container_name: proxy
+    restart: always
+    depends_on: 
+      - dns
+    ports:
+      - 127.0.0.1:3128:3128
 
   openssl:
     build: ./images/openssl/
