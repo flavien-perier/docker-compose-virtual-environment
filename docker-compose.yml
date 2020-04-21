@@ -25,7 +25,7 @@ services:
     volumes:
       - ./network/certificates:/root/certificates
     environment:
-      CERTIFICATES: phpmyadmin pgadmin mongo neo4j php jupyter vscode openrefine  
+      CERTIFICATES: phpmyadmin pgadmin mongo neo4j kafka php jupyter vscode openrefine  
 
   nginx: 
     image: nginx:alpine
@@ -40,6 +40,7 @@ services:
       - vscode
       - jupyter
       - openrefine
+      - kafka-magic
     volumes:
       - ./network/certificates:/etc/certificates:ro
       - ./network/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -166,13 +167,22 @@ services:
     restart: always
     links:
       - zookeeper
-    ports:
-      - 127.0.0.1:9092:9092
     environment:
       KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
       KAFKA_CREATE_TOPICS: "test:1:1"
+
+  kafka-magic:
+    image: digitsy/kafka-magic
+    container_name: kafka-magic
+    restart: always
+    links:
+      - kafka
+    ports:
+      - 127.0.0.1:8081:80
+    environment:
+      KMAGIC_ALLOW_TOPIC_DELETE: "true"
 
   php:
     build: ./images/php/

@@ -18,3 +18,4 @@ mongo        IN      CNAME   www
 jupyter      IN      CNAME   www
 vscode       IN      CNAME   www
 openrefine   IN      CNAME   www
+kafka        IN      CNAME   www

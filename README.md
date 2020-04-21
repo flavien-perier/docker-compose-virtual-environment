@@ -23,6 +23,7 @@ Login to the urls:
 - [openrefine.local](openrefine.local)
 - [mongo.local](mongo.local)
 - [neo4j.local](neo4j.local)
+- [kafka.local](kafka.local)
 - [pgadmin.local](pgadmin.local)
 - [phpmyadmin.local](phpmyadmin.local)
 - [php.local](php.local)
