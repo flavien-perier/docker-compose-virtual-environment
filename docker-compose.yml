@@ -152,6 +152,27 @@ services:
       - db-redis:/data
     ports:
       - 127.0.0.1:6379:6379
+  
+  zookeeper:
+    image: bitnami/zookeeper
+    container_name: zookeeper
+    restart: always
+    environment: 
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+  kafka:
+    image: bitnami/kafka
+    container_name: kafka
+    restart: always
+    links:
+      - zookeeper
+    ports:
+      - 127.0.0.1:9092:9092
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_CREATE_TOPICS: "test:1:1"
 
   php:
     build: ./images/php/

@@ -38,3 +38,4 @@ Uses services on ports:
 - `22017`: MongoDB
 - `7687`: Neo4j
 - `6379`: Redis
+- `9092`: Kafka
