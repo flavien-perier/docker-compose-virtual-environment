@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     python3 \
     python3-pip \
+    virtualenv \
     openjdk-11-jdk \
     maven \
     gradle \
@@ -27,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     make \
     openssh-client \
     openssh-server \
+    && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -q -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g $DOCKER_GID admin && \
