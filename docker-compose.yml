@@ -204,7 +204,7 @@ services:
       JUPYTER_PASSWORD: ${PASSWORD}
 
   vscode:
-    image: codercom/code-server:v2
+    image: codercom/code-server
     container_name: vscode
     restart: always
     volumes:
