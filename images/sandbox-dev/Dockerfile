@@ -35,10 +35,7 @@ RUN groupadd -g $DOCKER_GID admin && \
     useradd -g admin -m -u $DOCKER_UID admin && \
     echo "admin ALL=(ALL:ALL) ALL" >> /etc/sudoers
 
-RUN git clone https://github.com/flavien-perier/linuxShell.git && \
-    chmod 750 ./linuxShell/linux-shell.sh && \
-    ./linuxShell/linux-shell.sh && \
-    rm -Rf linuxShell
+RUN curl -s https://raw.githubusercontent.com/flavien-perier/linuxShell/master/linux-shell.sh | bash -
 
 RUN /etc/init.d/ssh stop && \
     mkdir /run/sshd
