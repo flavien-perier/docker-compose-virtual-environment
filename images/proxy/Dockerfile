@@ -6,6 +6,9 @@ LABEL description="Squid Proxy"
 
 RUN apk --update --no-cache add squid rsync
 
+ENV DNS=dns
+
+COPY start.sh /etc/squid/start.sh
 COPY squid.conf /etc/squid/squid.conf
 COPY lists.sh /etc/squid/lists.sh
 COPY bad-words.txt /etc/squid/lists/bad-words.txt
@@ -13,12 +16,13 @@ COPY bad-words.txt /etc/squid/lists/bad-words.txt
 RUN chown -R root:root /etc/squid && \
     chmod 550 /etc/squid/squid.conf && \
     chmod 750 /etc/squid/lists.sh && \
-    sh /etc/squid/lists.sh
+    sh /etc/squid/lists.sh && \
+    chown squid:squid -R /etc/squid/lists && \
+    chmod 440 -R /etc/squid/lists && \
+    rm /etc/squid/lists.sh
 
 VOLUME /var/squid/cache
 
 EXPOSE 3128
 
-CMD chown -R squid:squid /var/squid && \
-    squid -N -z && \
-    squid -N -S -d 1
+CMD /etc/squid/start.sh

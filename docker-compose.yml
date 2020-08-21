@@ -18,6 +18,8 @@ services:
       - dns
     ports:
       - 127.0.0.1:3128:3128
+    environment:
+      DNS: dns
 
   openssl:
     build: ./images/openssl/
