@@ -4,6 +4,8 @@ services:
     build: ./images/dns/
     container_name: dns
     restart: always
+    depends_on: 
+      - nginx
     volumes:
       - ./network/bind:/bind
     ports:
