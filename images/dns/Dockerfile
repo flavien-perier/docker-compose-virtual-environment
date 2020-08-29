@@ -6,7 +6,11 @@ LABEL description="Bind DNS"
 
 RUN apk --update --no-cache add bind
 
-VOLUME /etc/bind
+ENV SERVER_DOMAIN=127.0.0.1
+
+COPY start.sh /root/start.sh
+
+VOLUME /bind
 EXPOSE 53
 
-CMD named -c /etc/bind/named.conf -g -u named
+CMD /root/start.sh

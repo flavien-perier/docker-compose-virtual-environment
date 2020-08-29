@@ -12,11 +12,11 @@ echo "SANDBOX_LOCATION=/home/user/sandbox-files" >> .env
 docker compose up -d
 ```
 
-Use DNS `127.0.0.1:53`
+Use Proxy `127.0.0.1:3128`
 
 ## Usage
 
-Login to the urls:
+Login to urls:
 
 - [jupyter.local](jupyter.local)
 - [vscode.local](vscode.local)

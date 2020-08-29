@@ -8,7 +8,7 @@ $TTL    604800
 );
 
 @       IN      NS      www.local.
-www     IN      A       127.0.0.1
+www     IN      A       @SERVER_IP
 
 php          IN      CNAME   www
 phpmyadmin   IN      CNAME   www

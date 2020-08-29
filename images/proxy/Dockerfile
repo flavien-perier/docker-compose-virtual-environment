@@ -6,9 +6,9 @@ LABEL description="Squid Proxy"
 
 RUN apk --update --no-cache add squid rsync
 
-ENV DNS=dns
+ENV DNS=1.1.1.1
 
-COPY start.sh /etc/squid/start.sh
+COPY start.sh /root/start.sh
 COPY squid.conf /etc/squid/squid.conf
 COPY lists.sh /etc/squid/lists.sh
 COPY bad-words.txt /etc/squid/lists/bad-words.txt
@@ -25,4 +25,4 @@ VOLUME /var/squid/cache
 
 EXPOSE 3128
 
-CMD /etc/squid/start.sh
+CMD /root/start.sh

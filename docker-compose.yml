@@ -5,10 +5,11 @@ services:
     container_name: dns
     restart: always
     volumes:
-      - ./network/bind9/named.conf:/etc/bind/named.conf
-      - ./network/bind9/db.local:/etc/bind/db.local
+      - ./network/bind:/bind
     ports:
       - 127.0.0.1:53:53/udp
+    environment:
+      SERVER_DOMAIN: nginx
       
   proxy:
     build: ./images/proxy/
@@ -16,6 +17,8 @@ services:
     restart: always
     depends_on: 
       - dns
+    volumes:
+      - squid:/var/squid/cache
     ports:
       - 127.0.0.1:3128:3128
     environment:
@@ -247,6 +250,7 @@ services:
       PASSWORD: ${PASSWORD}
 
 volumes:
+  squid:
   db-maria:
   db-postgres:
   db-neo4j:
