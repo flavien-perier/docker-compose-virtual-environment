@@ -1,4 +1,4 @@
-# Docker compose virtual environment
+# Docker Compose Virtual Environment
 
 ## Installation
 
