@@ -38,7 +38,7 @@ services:
     image: nginx:alpine
     container_name: nginx
     restart: always
-    links:
+    depends_on:
       - php
       - phpmyadmin
       - pgadmin
@@ -74,7 +74,7 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
     restart: always
-    links: 
+    depends_on: 
       - mariadb
     environment:
       PMA_HOST: mariadb
@@ -99,7 +99,7 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     restart: always
-    links:
+    depends_on:
       - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: admin
@@ -121,7 +121,7 @@ services:
     image: mongo-express
     container_name: mongo-express
     restart: always
-    links: 
+    depends_on: 
       - mongo
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
@@ -172,7 +172,7 @@ services:
     image: bitnami/kafka
     container_name: kafka
     restart: always
-    links:
+    depends_on:
       - zookeeper
     ports:
       - 127.0.0.1:9092:9092
@@ -185,7 +185,7 @@ services:
     image: digitsy/kafka-magic
     container_name: kafka-magic
     restart: always
-    links:
+    depends_on:
       - kafka
     environment:
       KMAGIC_ALLOW_TOPIC_DELETE: "true"
@@ -194,7 +194,7 @@ services:
     build: ./images/php/
     container_name: php
     restart: always
-    links:
+    depends_on:
       - mariadb
     volumes:
       - ./documents/php:/var/www/html/documents
