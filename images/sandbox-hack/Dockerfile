@@ -27,7 +27,7 @@ RUN groupadd -g $DOCKER_GID admin && \
     useradd -g admin -m -u $DOCKER_UID admin && \
     echo "admin ALL=(ALL:ALL) ALL" >> /etc/sudoers
 
-RUN curl -s https://raw.githubusercontent.com/flavien-perier/linuxShell/master/linux-shell.sh | bash -
+RUN curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
 
 RUN /etc/init.d/ssh stop && \
     mkdir /run/sshd
