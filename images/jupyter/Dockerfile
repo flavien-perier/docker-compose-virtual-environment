@@ -28,8 +28,7 @@ USER jupyter
 VOLUME /opt/notebooks
 EXPOSE 8080
 
-RUN pip3 install pandas scipy numpy statsmodels sklearn matplotlib tensorflow tensorflow-gpu keras nltk \
-                 scapy
+RUN pip3 install pandas scipy numpy statsmodels sklearn matplotlib tensorflow tensorflow-gpu keras nltk
 
 RUN pip3 install jupyter-tabnine --user && \
     jupyter contrib nbextension install --user && \
