@@ -1,10 +1,10 @@
 version: "3.7"
 services:
   dns:
-    build: ./images/dns/
+    image: flavienperier/dns
     container_name: dns
     restart: always
-    depends_on: 
+    depends_on:
       - nginx
     volumes:
       - ./network/bind:/bind
@@ -14,10 +14,10 @@ services:
       SERVER_DOMAIN: nginx
       
   proxy:
-    build: ./images/proxy/
+    image: flavienperier/proxy
     container_name: proxy
     restart: always
-    depends_on: 
+    depends_on:
       - dns
     volumes:
       - squid:/var/squid/cache
@@ -27,7 +27,7 @@ services:
       DNS: dns
 
   openssl:
-    build: ./images/openssl/
+    image: flavienperier/openssl
     container_name: openssl
     volumes:
       - ./network/certificates:/root/certificates
@@ -74,7 +74,7 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
     restart: always
-    depends_on: 
+    depends_on:
       - mariadb
     environment:
       PMA_HOST: mariadb
@@ -121,7 +121,7 @@ services:
     image: mongo-express
     container_name: mongo-express
     restart: always
-    depends_on: 
+    depends_on:
       - mongo
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
@@ -201,7 +201,7 @@ services:
       - ${SANDBOX_LOCATION}:/var/www/html/sandbox
 
   jupyter:
-    build: ./images/jupyter/
+    image: flavienperier/jupyter
     container_name: jupyter
     restart: always
     volumes:
@@ -227,7 +227,7 @@ services:
       - ./documents/openrefine:/data
 
   sandbox-dev:
-    build: ./images/sandbox-dev/
+    image: flavienperier/sandbox-dev
     container_name: sandbox-dev
     restart: always
     volumes:
@@ -240,7 +240,7 @@ services:
       PASSWORD: ${PASSWORD}
 
   sandbox-hack:
-    build: ./images/sandbox-hack/
+    image: flavienperier/sandbox-hack
     container_name: sandbox-hack
     restart: always
     volumes:
