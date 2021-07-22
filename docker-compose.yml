@@ -6,13 +6,14 @@ services:
     restart: always
     depends_on:
       - nginx
-    volumes:
-      - ./network/bind:/bind
     ports:
       - 127.0.0.1:53:53/udp
     environment:
       SERVER_DOMAIN: nginx
-      
+      BASE_PATH: lan
+      SUB_DOMAINS: php mysql postgresql neo4j mongodb jupyter vscode openrefine kafka
+      SUB_DNS: 208.67.222.222 208.67.220.220 1.1.1.1 1.0.0.1 151.80.222.79  
+
   proxy:
     image: flavienperier/proxy
     container_name: proxy
@@ -30,9 +31,9 @@ services:
     image: flavienperier/openssl
     container_name: openssl
     volumes:
-      - ./network/certificates:/root/certificates
+      - ./network/certificates:/certificates
     environment:
-      CERTIFICATES: phpmyadmin pgadmin mongo neo4j kafka php jupyter vscode openrefine  
+      CERTIFICATES: mysql postgresql mongodb neo4j kafka php jupyter vscode openrefine  
 
   nginx: 
     image: nginx:alpine
@@ -55,6 +56,7 @@ services:
     ports:
       - 127.0.0.1:80:80
       - 127.0.0.1:443:443
+      - 127.0.0.1:7687:7687
 
   mariadb:
     image: mariadb
@@ -102,7 +104,7 @@ services:
     depends_on:
       - postgres
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_EMAIL: admin@mail.local
       PGADMIN_DEFAULT_PASSWORD: ${PASSWORD}
 
   mongo:
@@ -133,10 +135,8 @@ services:
     container_name: neo4j
     restart: always
     volumes:
-      - ./network/certificates/neo4j:/var/lib/neo4j/certificates:ro
+      - ./network/certificates/neo4j:/var/lib/neo4j/certificates
       - db-neo4j:/data
-    ports:
-      - 127.0.0.1:7687:7687
     environment:
       NEO4J_AUTH: neo4j/${PASSWORD}
       NEO4J_dbms_connector_bolt_advertised__address: neo4j.local:7687

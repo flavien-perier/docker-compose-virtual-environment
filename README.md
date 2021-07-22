@@ -1,3 +1,5 @@
+![license](https://badgen.net/github/license/flavien-perier/docker-compose-virtual-environment)
+
 # Docker Compose Virtual Environment
 
 ## Installation
