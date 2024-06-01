@@ -5,8 +5,6 @@
 ## Installation
 
 ```sh
-mkdir documents
-
 echo 'DOMAIN=domain.lan
 PASSWORD=password
 SANDBOX_LOCATION=/home/user/sandbox-files' > .env
@@ -21,6 +19,7 @@ Use Proxy `127.0.0.1:3128`
 Login to urls:
 
 - [jupyter.domain.lan](https://jupyter.domain.lan/)
+- [website.domain.lan](https://website.domain.lan/)
 
 Uses services on ports:
 
